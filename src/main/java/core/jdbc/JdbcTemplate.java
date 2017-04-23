@@ -10,15 +10,7 @@ import java.util.List;
 
 public class JdbcTemplate {
 
-    private core.jdbc.RowMapper rowMapper;
-    private PreparedStatementSetter pstmtsetter;
-
-    public JdbcTemplate(RowMapper rowMapper, PreparedStatementSetter pstmtsetter) {
-        this.rowMapper = rowMapper;
-        this.pstmtsetter = pstmtsetter;
-    }
-
-    public void update(String sql, Object... objects) throws SQLException {
+    public void update(String sql, PreparedStatementSetter pstmtsetter, Object... objects) throws SQLException {
         try (Connection con = ConnectionManager.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -27,7 +19,7 @@ public class JdbcTemplate {
         }
     }
 
-    public List query(String sql, Object... objects) throws SQLException {
+    public List query(String sql, RowMapper rowMapper, PreparedStatementSetter pstmtsetter, Object... objects) throws SQLException {
         try (Connection con = ConnectionManager.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -42,8 +34,8 @@ public class JdbcTemplate {
         }
     }
 
-    public Object queryForObject(String sql, Object... objects) throws SQLException {
-        List values = query(sql, objects);
+    public Object queryForObject(String sql, RowMapper rowMapper, PreparedStatementSetter pstmtsetter, Object... objects) throws SQLException {
+        List values = query(sql, rowMapper, pstmtsetter, objects);
         if (values.isEmpty()) {
             return null;
         }

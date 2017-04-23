@@ -16,29 +16,29 @@ public class UserDao {
             pstmt.setString(i, (String) objects[i - 1]);
         }
     };
-    private JdbcTemplate template = new JdbcTemplate(rowMapper, preparedStatementSetter);
+    private JdbcTemplate template = new JdbcTemplate();
 
     public void insert(User user) throws SQLException {
 
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-        template.update(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
+        template.update(sql, preparedStatementSetter, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public void update(User user) throws SQLException {
 
         String sql = "UPDATE USERS set password = ?, name = ?, email = ? WHERE userId = ?";
-        template.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
+        template.update(sql, preparedStatementSetter, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     public User findByUserId(String userId) throws SQLException {
 
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return (User) template.queryForObject(sql, userId);
+        return (User) template.queryForObject(sql, rowMapper, preparedStatementSetter, userId);
     }
 
     public List<User> findAll() throws SQLException {
 
         String sql = "SELECT userId, password, name, email FROM USERS";
-        return (List<User>) template.query(sql);
+        return (List<User>) template.query(sql, rowMapper, preparedStatementSetter);
     }
 }
