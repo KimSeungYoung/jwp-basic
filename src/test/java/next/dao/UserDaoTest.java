@@ -1,19 +1,23 @@
 package next.dao;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
+import core.jdbc.ConnectionManager;
+import next.model.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import core.jdbc.ConnectionManager;
-import next.model.User;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class UserDaoTest {
+
+    private Logger log = LoggerFactory.getLogger(UserDaoTest.class);
+
     @Before
     public void setup() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
@@ -32,6 +36,7 @@ public class UserDaoTest {
         expected.update(new User("userId", "password2", "name2", "sanjigi@email.com"));
         userDao.update(expected);
         actual = userDao.findByUserId(expected.getUserId());
+
         assertEquals(expected, actual);
     }
 
