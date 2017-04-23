@@ -2,8 +2,7 @@ package next.dao;
 
 import core.jdbc.JdbcTemplate;
 import core.jdbc.PreparedStatementSetter;
-import core.jdbc.PreparedStatementSetterImple;
-import core.jdbc.RowMapperImpl;
+import core.jdbc.RowMapper;
 import next.model.User;
 
 import java.sql.SQLException;
@@ -11,8 +10,12 @@ import java.util.List;
 
 public class UserDao {
 
-    private core.jdbc.RowMapper rowMapper = new RowMapperImpl();
-    private PreparedStatementSetter preparedStatementSetter = new PreparedStatementSetterImple();
+    private RowMapper rowMapper = rs -> new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
+    private PreparedStatementSetter preparedStatementSetter = (pstmt, objects) -> {
+        for (int i = 1; i <= objects.length; i++) {
+            pstmt.setString(i, (String) objects[i - 1]);
+        }
+    };
     private JdbcTemplate template = new JdbcTemplate(rowMapper, preparedStatementSetter);
 
     public void insert(User user) throws SQLException {
