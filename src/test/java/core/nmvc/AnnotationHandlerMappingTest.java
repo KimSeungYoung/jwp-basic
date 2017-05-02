@@ -14,7 +14,7 @@ public class AnnotationHandlerMappingTest {
 
     @Before
     public void setup() throws Exception {
-        handlerMapping = new AnnotationHandlerMapping("core.nmvc");
+        handlerMapping = new AnnotationHandlerMapping("core.nmvc", "next.controller");
         handlerMapping.initialize();
 
         response = new MockHttpServletResponse();
@@ -45,5 +45,14 @@ public class AnnotationHandlerMappingTest {
         ModelAndView mav = execution.handle(request, response);
         mav.getView().render(mav.getModel(), request, response);
         assertEquals("/users", response.getRedirectedUrl());
+    }
+
+    @Test
+    public void home() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/");
+        HandlerExecution execution = handlerMapping.getHandler(request);
+        ModelAndView mav = execution.handle(request, response);
+        mav.getView().render(mav.getModel(), request, response);
+        assertEquals("home.jsp", response.getForwardedUrl());
     }
 }

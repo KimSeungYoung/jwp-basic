@@ -5,9 +5,6 @@ import core.annotation.Controller;
 import core.annotation.RequestMapping;
 import core.annotation.RequestMethod;
 import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +26,23 @@ public class AnnotationHandlerMapping {
     }
 
     public void initialize() throws Exception {
-        Reflections reflections = new Reflections(basePackage, new MethodAnnotationsScanner(), new TypeAnnotationsScanner(), new SubTypesScanner());
+        scanMethodsAnnotated();
+    }
+
+    private void scanMethodsAnnotated() throws InstantiationException, IllegalAccessException {
+        Reflections reflections = new Reflections(basePackage);
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(Controller.class);
         for (Class<?> annotatedClass : annotated) {
             logger.debug("annotated class : {}", annotatedClass.getName());
-            Set<Method> methods = reflections.getMethodsAnnotatedWith(RequestMapping.class);
-
+            Method[] methods = annotatedClass.getMethods();
             for (Method method : methods) {
-                RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-                String value = requestMapping.value();
-                RequestMethod requestMethod = requestMapping.method();
-                handlerExecutions.put(new HandlerKey(value, requestMethod), new HandlerExecution(method, annotatedClass.newInstance()));
+                if(method.isAnnotationPresent(RequestMapping.class)) {
+                    RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                    String value = requestMapping.value();
+                    RequestMethod requestMethod = requestMapping.method();
+                    logger.debug("method name : {}, class's instance : {}", method.getName(), annotatedClass.newInstance());
+                    handlerExecutions.put(new HandlerKey(value, requestMethod), new HandlerExecution(method, annotatedClass.newInstance()));
+                }
             }
         }
     }
