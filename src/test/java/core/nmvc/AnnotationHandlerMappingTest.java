@@ -55,4 +55,22 @@ public class AnnotationHandlerMappingTest {
         mav.getView().render(mav.getModel(), request, response);
         assertEquals("home.jsp", response.getForwardedUrl());
     }
+
+    @Test
+    public void userForm() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users/form");
+        HandlerExecution execution = handlerMapping.getHandler(request);
+        ModelAndView mav = execution.handle(request, response);
+        mav.getView().render(mav.getModel(), request, response);
+        assertEquals("/user/form.jsp", response.getForwardedUrl());
+    }
+
+    @Test
+    public void loginForm() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users/loginForm");
+        HandlerExecution execution = handlerMapping.getHandler(request);
+        ModelAndView mav = execution.handle(request, response);
+        mav.getView().render(mav.getModel(), request, response);
+        assertEquals("/user/login.jsp", response.getForwardedUrl());
+    }
 }
