@@ -11,7 +11,6 @@ import next.controller.qna.ShowQuestionController;
 import next.controller.qna.UpdateFormQuestionController;
 import next.controller.qna.UpdateQuestionController;
 import next.controller.user.CreateUserController;
-import next.controller.user.ListUserController;
 import next.controller.user.LoginController;
 import next.controller.user.LogoutController;
 import next.controller.user.ProfileController;
@@ -31,7 +30,7 @@ public class RequestMapping {
 //        mappings.put("/", new HomeController());
 //        mappings.put("/users/form", new ForwardController("/user/form.jsp"));
 //        mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
-        mappings.put("/users", new ListUserController());
+//        mappings.put("/users", new ListUserController());
         mappings.put("/users/login", new LoginController());
         mappings.put("/users/profile", new ProfileController());
         mappings.put("/users/logout", new LogoutController());
