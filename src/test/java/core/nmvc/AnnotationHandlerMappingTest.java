@@ -1,20 +1,19 @@
 package core.nmvc;
 
-import static org.junit.Assert.*;
-
+import core.mvc.ModelAndView;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import core.mvc.ModelAndView;
+import static org.junit.Assert.assertEquals;
 
 public class AnnotationHandlerMappingTest {
     private AnnotationHandlerMapping handlerMapping;
     private MockHttpServletResponse response;
 
     @Before
-    public void setup() {
+    public void setup() throws InstantiationException, IllegalAccessException {
         handlerMapping = new AnnotationHandlerMapping("core.nmvc");
         handlerMapping.initialize();
 
