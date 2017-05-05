@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AnnotationHandlerMappingTest {
     private AnnotationHandlerMapping handlerMapping;
@@ -77,15 +78,27 @@ public class AnnotationHandlerMappingTest {
         assertEquals("/users/loginForm", response.getRedirectedUrl());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void userLoginIdNotMached() throws Exception {
+        login();
+        executeTestWith("GET", "/users/login");
+        assertEquals("/", response.getRedirectedUrl());
+        fail();
+    }
+
     private void executeTestWith(String requestMethod, String requestUrl) throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest(requestMethod, requestUrl);
+        setSessionIfLogined(request);
+        HandlerExecution execution = handlerMapping.getHandler(request);
+        ModelAndView mav = execution.handle(request, response);
+        mav.getView().render(mav.getModel(), request, response);
+    }
+
+    private void setSessionIfLogined(MockHttpServletRequest request) {
         if(isLogin) {
             HttpSession session = request.getSession();
             session.setAttribute("user", new User("sykim", "1234", "김승영", "sykim@woowahan.com"));
         }
-        HandlerExecution execution = handlerMapping.getHandler(request);
-        ModelAndView mav = execution.handle(request, response);
-        mav.getView().render(mav.getModel(), request, response);
     }
 
     private void login() {
