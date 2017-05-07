@@ -58,13 +58,12 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private Object getHandler(HttpServletRequest req) {
-        for (HandlerMapping handlerMapping : mappings) {
-            Object handler = handlerMapping.getHandler(req);
-            if (handler != null) {
-                return handler;
-            }
-        }
-        return null;
+        return mappings.stream()
+                .map(hm -> hm.getHandler(req))
+                .filter(h -> h.isPresent())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 URL입니다."))
+                .get();
     }
 
     private ModelAndView execute(Object handler, HttpServletRequest req, HttpServletResponse resp) throws Exception {

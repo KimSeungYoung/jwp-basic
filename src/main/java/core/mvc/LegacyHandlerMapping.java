@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class LegacyHandlerMapping implements HandlerMapping {
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
@@ -40,7 +41,7 @@ public class LegacyHandlerMapping implements HandlerMapping {
     }
 
     @Override
-    public Controller getHandler(HttpServletRequest request) {
-        return mappings.get(request.getRequestURI());
+    public Optional<Controller> getHandler(HttpServletRequest request) {
+        return Optional.ofNullable(mappings.get(request.getRequestURI()));
     }
 }

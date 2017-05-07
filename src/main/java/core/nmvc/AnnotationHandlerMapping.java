@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class AnnotationHandlerMapping implements HandlerMapping {
@@ -54,10 +55,10 @@ public class AnnotationHandlerMapping implements HandlerMapping {
     }
 
     @Override
-    public HandlerExecution getHandler(HttpServletRequest request) {
+    public Optional<HandlerExecution> getHandler(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         RequestMethod rm = RequestMethod.valueOf(request.getMethod().toUpperCase());
         logger.debug("requestUri : {}, requestMethod : {}", requestUri, rm);
-        return handlerExecutions.get(new HandlerKey(requestUri, rm));
+        return Optional.ofNullable(handlerExecutions.get(new HandlerKey(requestUri, rm)));
     }
 }
