@@ -46,4 +46,6 @@ public class AnnotationHandlerMappingTest {
         mav.getView().render(mav.getModel(), request, response);
         assertEquals("/users", response.getRedirectedUrl());
     }
+
+
 }

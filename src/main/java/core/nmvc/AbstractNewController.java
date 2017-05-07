@@ -1,4 +1,4 @@
-package next.controller.user;
+package core.nmvc;
 
 import core.mvc.JsonView;
 import core.mvc.JspView;
